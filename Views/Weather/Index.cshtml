@@ -1,0 +1,126 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<WeatherArchive.Models.WeatherRecord>
+
+@{
+    ViewData["Title"] = "Архив погодных условий";
+}
+
+
+<div class="justify-content-center flex-row d-flex mb-4">
+<h1>Архив погодных условий в Москве</h1>
+</div>
+
+<div class="btn-group mb-3">
+    <a asp-action="Index" asp-route-viewType="year"
+       class="btn @(ViewBag.ViewType == "year" ? "btn-primary" : "btn-outline-primary")">По годам</a>
+    <a asp-action="Index" asp-route-viewType="month"
+       class="btn @(ViewBag.ViewType == "month" ? "btn-primary" : "btn-outline-primary")">По месяцам</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="form-inline">
+            <div class="form-group mr-3 mb-3">
+                <label for="year" class="mr-2">Год:</label>
+                <input type="number" id="year" name="year" class="form-control"
+                       value="@Context.Request.Query["year"]" min="@ViewBag.MinYear" max="@ViewBag.MaxYear"/>
+            </div>
+            @if (ViewBag.ViewType == "month")
+            {
+                <div class="form-group mr-3 mb-3">
+                    <label for="month" class="mr-2">Месяц:</label>
+                    <select id="month" name="month" class="form-control">
+                        <option value="">Все месяцы</option>
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i" selected="@(Context.Request.Query["month"] == i.ToString())">
+                                @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)
+                            </option>
+                        }
+                    </select>
+                </div>
+            }
+            <input type="hidden" name="viewType" value="@ViewBag.ViewType" />
+            <button type="submit" class="btn btn-primary">Фильтровать</button>
+            <a href="@Url.Action("Index", new { viewType = ViewBag.ViewType })" class="btn btn-secondary ml-2">Сбросить</a>
+        </form>
+    </div>
+</div>
+
+<div class="flex-row d-flex justify-content-center">
+    <div>
+        @Html.PagedListPager(Model, page => Url.Action("Index", new
+            {
+                page = page,
+                year = Context.Request.Query["year"],
+                month = Context.Request.Query["month"],
+                viewType = ViewBag.ViewType
+            }),
+            new PagedListRenderOptions {
+                DisplayEllipsesWhenNotShowingAllPageNumbers = false,
+                MaximumPageNumbersToDisplay = 5,
+                LiElementClasses = new string[] { "page-item" },
+                PageClasses = new string[] { "page-link" }
+            })
+    </div>
+</div>
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+    <tr>
+        <th>Дата (МСК)</th>
+        <th>Время (МСК)</th>
+        <th>Температура (°C)</th>
+        <th>Влажность Воздуха (%)</th>
+        <th>Точка росы (°C)</th>
+        <th>Давление (мм рт. ст.)</th>
+        <th>Направление ветра</th>
+        <th>Скорость ветра (м/с)</th>
+        <th>Облачность (%)</th>
+        <th>Нижняя граница Облачности (м)</th>
+        <th>Горизонтальная видимость (км)</th>
+        <th>Погодные явления</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Date.ToString("dd.MM.yyyy")</td>
+            <td>@item.Time.ToString("HH:mm")</td>
+            <td>@item.Temperature?.ToString("F1")</td>
+            <td>@item.Humidity?.ToString("F1")</td>
+            <td>@item.DewPoint?.ToString("F1")</td>
+            <td>@item.Pressure</td>
+            <td>@item.WindDirection</td>
+            <td>@item.WindSpeed</td>
+            <td>@item.CloudCover</td>
+            <td>@item.CloudBase</td>
+            <td>@item.HorizontalVisibility</td>
+            <td>@item.WeatherPhenomena</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+
+<div class="flex-row d-flex justify-content-center">
+    <div>
+        @Html.PagedListPager(Model, page => Url.Action("Index", new
+            {
+                page = page,
+                year = Context.Request.Query["year"],
+                month = Context.Request.Query["month"],
+                viewType = ViewBag.ViewType
+            }),
+            new PagedListRenderOptions {
+                DisplayEllipsesWhenNotShowingAllPageNumbers = false,
+                MaximumPageNumbersToDisplay = 5,
+                LiElementClasses = new string[] { "page-item" },
+                PageClasses = new string[] { "page-link" }
+            })
+    </div>
+</div>
+    

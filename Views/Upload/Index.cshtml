@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Загрузка архивов погоды";
+}
+
+
+<div class="justify-content-center flex-row d-flex mb-4">
+    <h1>Загрузка архивов погодных условий</h1>
+</div>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info">@ViewBag.Message</div>
+}
+
+<form asp-action="UploadFiles" method="post" enctype="multipart/form-data">
+    <div class="form-group mb-3">
+        <label for="files" class="form-label fs-5">Выберите файлы Excel с архивом погоды:</label>
+        <input type="file" name="files" id="files" class="form-control form-control-lg" multiple accept=".xlsx,.xls" />
+    </div>
+    <button type="submit" class="btn btn-primary">Загрузить</button>
+</form>
+
+<div class="mt-4">
+    <h4>Инструкция:</h4>
+    <ul>
+        <li>Поддерживаются файлы Excel (.xlsx, .xls)</li>
+        <li>Можно загружать несколько файлов одновременно</li>
+        <li>Файлы должны соответствовать формату архивов погоды Москвы</li>
+        <li>Некорректные файлы будут проигнорированы</li>
+    </ul>
+</div>

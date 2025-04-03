@@ -1,0 +1,13 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Московский архив погоды";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Московский архив погоды</h1>
+    <link rel="stylesheet" href="css/home.css" />
+    <div class="mt-5">
+        <a asp-controller="Weather" asp-action="Index" class="btn btn-primary btn-lg mr-3">Просмотр архивов</a>
+        <a asp-controller="Upload" asp-action="Index" class="btn btn-secondary btn-lg">Загрузка архивов</a>
+    </div>
+</div>
